@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Checker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <h1>Accessibility Checker</h1>
+  <div class="container">
+
+    <div class="input-section">
+      <label for="html-input">HTML to test:</label>
+      <textarea id="html-input" rows="10" placeholder="<html>...</html>"></textarea>
+
+      <div class="buttons">
+        <button id="test-btn">Run test</button>
+        <button id="clear-btn">Clear</button>
+        <button id="sample-btn">Load example</button>
+      </div>
+    </div>
+
+    <div class="results-section">
+      <h2>Results</h2>
+      <div class="summary-box">
+        <div id="summary" class="summary-content">
+          <p>No tests run yet</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="violations">Violations</button>
+        <button class="tab-btn" data-tab="passes">Passes</button>
+      </div>
+
+      <div id="violations" class="tab-content active">
+        <p class="placeholder">No violations</p>
+      </div>
+
+      <div id="passes" class="tab-content">
+        <p class="placeholder">No passing rule</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
