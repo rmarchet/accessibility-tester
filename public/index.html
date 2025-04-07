@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accessibility Checker</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
 </head>
 
 <body>
@@ -13,8 +18,26 @@
   <div class="container">
 
     <div class="input-section">
-      <label for="html-input">HTML to test:</label>
-      <textarea id="html-input" rows="10" placeholder="<html>...</html>"></textarea>
+      <div class="input-tabs">
+        <button class="input-tab-btn active" data-input="text">Input HTML</button>
+        <button class="input-tab-btn" data-input="file">Upload File</button>
+        <button class="input-tab-btn" data-input="url">Test URL</button>
+      </div>
+      
+      <div id="text-input-tab" class="input-content active">
+        <label for="html-input">HTML to test:</label>
+        <textarea id="html-input" rows="10" placeholder="<html>...</html>"></textarea>
+      </div>
+      
+      <div id="file-input-tab" class="input-content">
+        <label for="file-input">Upload HTML file:</label>
+        <input type="file" id="file-input" accept=".html,.htm">
+      </div>
+      
+      <div id="url-input-tab" class="input-content">
+        <label for="url-input">Enter webpage URL:</label>
+        <input type="url" id="url-input" placeholder="https://example.com" class="url-field">
+      </div>
 
       <div class="buttons">
         <button id="test-btn">Run test</button>

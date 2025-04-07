@@ -24,7 +24,6 @@ body {
 }
 
 .container {
-  max-width: 1200px;
   display: flex;
   margin: 0 auto;
   padding: 20px;
@@ -38,7 +37,7 @@ body {
 h1 {
   color: var(--primary-color);
   margin-bottom: 20px;
-  text-align: center;
+  font-weight: 100;
 }
 
 h2 {
@@ -57,6 +56,37 @@ h3 {
   min-width: 300px;
 }
 
+.input-tabs {
+  display: flex;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.input-tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 14px;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.input-tab-btn.active {
+  border-bottom-color: #3498db;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.input-content {
+  display: none;
+}
+
+.input-content.active {
+  display: block;
+}
+
 label {
   display: block;
   margin-bottom: 8px;
@@ -65,13 +95,17 @@ label {
   font-weight: bold;
 }
 
-textarea {
+textarea, input[type="file"], input[type="url"] {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: var(--border-radius);
   resize: vertical;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.url-field {
+  width: 100%;
 }
 
 .buttons {

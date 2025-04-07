@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   // Elementi DOM
   const htmlInput = document.getElementById('html-input');
+  const fileInput = document.getElementById('file-input');
+  const urlInput = document.getElementById('url-input');
   const testBtn = document.getElementById('test-btn');
   const clearBtn = document.getElementById('clear-btn');
   const sampleBtn = document.getElementById('sample-btn');
@@ -9,22 +11,61 @@ document.addEventListener('DOMContentLoaded', function () {
   const passesEl = document.getElementById('passes');
   const tabBtns = document.querySelectorAll('.tab-btn');
 
-  // Gestione cambio tab
+  // Tab navigation for input methods
+  const inputTabButtons = document.querySelectorAll('.input-tab-btn');
+  const inputContents = document.querySelectorAll('.input-content');
+  
+  // Tab navigation for results
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+  
+  // Track current active input method
+  let activeInputMethod = 'text';
+
+  inputTabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Update active input method
+      activeInputMethod = button.getAttribute('data-input');
+      
+      // Update active tab button
+      inputTabButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      
+      // Show corresponding content
+      inputContents.forEach(content => content.classList.remove('active'));
+      document.getElementById(`${activeInputMethod}-input-tab`).classList.add('active');
+    });
+  });
+
+  
   tabBtns.forEach(btn => {
     btn.addEventListener('click', function () {
       const tabId = this.dataset.tab;
 
-      // Rimuovi classe active da tutti i pulsanti e contenuti
       tabBtns.forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-      // Aggiungi classe active al pulsante e contenuto corrente
       this.classList.add('active');
       document.getElementById(tabId).classList.add('active');
     });
   });
-
-  // Esempio di HTML con problemi di accessibilità
+  
+  // Handle file upload
+  fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file && (file.type === 'text/html' || file.name.endsWith('.html') || file.name.endsWith('.htm'))) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Populate the HTML input with file contents
+        htmlInput.value = e.target.result;
+      };
+      reader.readAsText(file);
+    } else {
+      alert('Please select a valid HTML file');
+      fileInput.value = '';
+    }
+  });
+  
   const sampleHtml = `<!DOCTYPE html>
 <html>
 <head>
@@ -56,34 +97,109 @@ document.addEventListener('DOMContentLoaded', function () {
   // Carica HTML di esempio
   sampleBtn.addEventListener('click', function () {
     htmlInput.value = sampleHtml;
+    // Switch to text input tab
+    inputTabButtons.forEach(btn => btn.classList.remove('active'));
+    inputContents.forEach(content => content.classList.remove('active'));
+    document.querySelector('[data-input="text"]').classList.add('active');
+    document.getElementById('text-input-tab').classList.add('active');
+    activeInputMethod = 'text';
   });
 
-  // Pulisci form e risultati
-  clearBtn.addEventListener('click', function () {
+  
+  // Clear functionality
+  clearBtn.addEventListener('click', () => {
     htmlInput.value = '';
-    clearResults();
+    fileInput.value = '';
+    urlInput.value = '';
+    
+    // Reset results
+    summaryEl.innerHTML = '<p>No tests run yet</p>';
+    violationsEl.innerHTML = '<p class="placeholder">No violations</p>';
+    passesEl.innerHTML = '<p class="placeholder">No passing rule</p>';
   });
 
-  // Funzione per pulire i risultati
-  function clearResults() {
-    summaryEl.innerHTML = '<p>No test run</p>';
-    violationsEl.innerHTML = '<p class="placeholder">No violations found</p>';
-    passesEl.innerHTML = '<p class="placeholder">No passing rule</p>';
-  }
 
   // Esegui test di accessibilità
   testBtn.addEventListener('click', async function () {
-    const html = htmlInput.value.trim();
+    let htmlToTest = '';
+    
+    // Get HTML based on active input method
+    switch (activeInputMethod) {
+      case 'text':
+        htmlToTest = htmlInput.value.trim();
+        if (!htmlToTest) {
+          alert('Please enter some HTML to test');
+          return;
+        }
+        break;
+        
+      case 'file':
+        if (!fileInput.files[0]) {
+          alert('Please select a file to test');
+          return;
+        }
+        // HTML already loaded into htmlInput when file selected
+        htmlToTest = htmlInput.value.trim();
+        break;
+        
+      case 'url':
+        const url = urlInput.value.trim();
+        if (!url) {
+          alert('Please enter a URL to test');
+          return;
+        }
+        summaryEl.innerHTML = '<div class="spinner"></div>';
+        violationsEl.innerHTML = '<div class="loading">Check in progress...</div>';
+        passesEl.innerHTML = '<div class="loading">Check in progress...</div>';
 
-    if (!html) {
-      alert('Inserisci il codice HTML da testare');
-      return;
+        // Test URL through server
+        try {
+          const fetchResponse = await fetch('/api/fetch-url/fetch', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url })
+          });
+    
+          if (!fetchResponse.ok) {
+            throw new Error('Failed to fetch URL content');
+          }
+          
+          const result = await fetchResponse.json();
+          
+          if (!result.html) {
+            throw new Error('No HTML content received from URL');
+          }
+          
+          // Usa l'HTML recuperato per il test di accessibilità
+          const response = await fetch('/api/accessibility/test', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ html: result.html })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Error during the API request');
+          }
+          
+          const data = await response.json();
+          displayResults(data);
+        } catch (error) {
+          console.error('Error:', error);
+          summaryEl.innerHTML = `<p>Errore: ${error.message}</p>`;
+          violationsEl.innerHTML = '<p class="placeholder">An error occurred</p>';
+          passesEl.innerHTML = '<p class="placeholder">An error occurred</p>';
+        }
+        return;
     }
 
     // Mostra indicatore di caricamento
     summaryEl.innerHTML = '<div class="spinner"></div>';
-    violationsEl.innerHTML = '<div class="loading">Analisi in corso...</div>';
-    passesEl.innerHTML = '<div class="loading">Analisi in corso...</div>';
+    violationsEl.innerHTML = '<div class="loading">Check in progress...</div>';
+    passesEl.innerHTML = '<div class="loading">Check in progress...</div>';
 
     try {
       const response = await fetch('/api/accessibility/test', {
@@ -91,11 +207,11 @@ document.addEventListener('DOMContentLoaded', function () {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ html })
+        body: JSON.stringify({ html: htmlToTest })
       });
 
       if (!response.ok) {
-        throw new Error('Errore durante la richiesta API');
+        throw new Error('Error during the API request');
       }
 
       const data = await response.json();
