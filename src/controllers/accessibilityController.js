@@ -1,4 +1,4 @@
-class AccessibilityController {
+export class AccessibilityController {
   constructor(accessibilityService) {
     this.accessibilityService = accessibilityService
   }
@@ -20,5 +20,3 @@ class AccessibilityController {
     }
   }
 }
-
-export default AccessibilityController

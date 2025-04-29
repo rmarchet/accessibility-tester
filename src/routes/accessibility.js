@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import AccessibilityController from '../controllers/accessibilityController'
-import AccessibilityService from '../services/accessibilityService'
+import { AccessibilityController } from '../controllers/accessibilityController'
+import { AccessibilityService } from '../services/accessibilityService'
 
 const router = Router()
 const accessibilityService = new AccessibilityService()

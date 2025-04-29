@@ -1,5 +1,5 @@
-import AccessibilityController from '../../controllers/accessibilityController';
-import AccessibilityService from '../../services/accessibilityService';
+import { AccessibilityController } from '../../controllers/accessibilityController'
+import { AccessibilityService } from '../../services/accessibilityService'
 
 describe('AccessibilityController', () => {
   let accessibilityController;
@@ -78,4 +78,4 @@ describe('AccessibilityController', () => {
       error: 'An error occurred while testing accessibility',
     });
   });
-});
+})

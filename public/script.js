@@ -65,34 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
       fileInput.value = '';
     }
   });
-  
-  const sampleHtml = `<!DOCTYPE html>
-<html>
-<head>
-    <title>Pagina di esempio con problemi di accessibilità</title>
-</head>
-<body>
-    <div>
-        <img src="logo.png" />
-        <h3>Benvenuto sul nostro sito</h3>
-        <div style="color: #aaa;">
-            Questo testo ha un contrasto insufficiente
-        </div>
-        <button onclick="alert('cliccato')">Clicca qui</button>
-        <div role="button">Questo è un falso pulsante</div>
-        <table>
-            <tr>
-                <td>Nome</td>
-                <td>Email</td>
-            </tr>
-            <tr>
-                <td>Mario Rossi</td>
-                <td>mario@example.com</td>
-            </tr>
-        </table>
-    </div>
-</body>
-</html>`;
 
   // Carica HTML di esempio
   sampleBtn.addEventListener('click', function () {
@@ -225,9 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Mostra i risultati nell'interfaccia
   function displayResults(data) {
-    // Aggiorna il riepilogo
     summaryEl.innerHTML = `
       <div class="summary-item summary-item-total">
         <h4>Total Criteria</h4>
@@ -243,9 +213,8 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
       `;
 
-    // Aggiorna le violazioni
     if (data.violations.length === 0) {
-      violationsEl.innerHTML = '<p class="placeholder">Nessuna violazione trovata</p>';
+      violationsEl.innerHTML = '<p class="placeholder">No violation</p>';
     } else {
       let violationsHtml = '';
 
@@ -267,8 +236,8 @@ document.addEventListener('DOMContentLoaded', function () {
               <span class="impact ${violation.impact}">${violation.impact}</span>
             </h4>
             <p>${escapeHtml(violation.help)}</p>
-            <a href="${violation.helpUrl}" target="_blank" class="help-link">Maggiori informazioni</a>
-            <h5>Elementi con problemi:</h5>
+            <a href="${violation.helpUrl}" target="_blank" class="help-link">More info...</a>
+            <h5>Elements with issues:</h5>
             ${nodesHtml}
           </div>
           `;
@@ -277,9 +246,8 @@ document.addEventListener('DOMContentLoaded', function () {
       violationsEl.innerHTML = violationsHtml;
     }
 
-    // Aggiorna i criteri soddisfatti
     if (data.passes.length === 0) {
-      passesEl.innerHTML = '<p class="placeholder">Nessun criterio soddisfatto</p>';
+      passesEl.innerHTML = '<p class="placeholder">No criteria</p>';
     } else {
       let passesHtml = '';
 
@@ -298,9 +266,9 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="pass-item">
             <h4>${escapeHtml(pass.description)}</h4>
             <p>${escapeHtml(pass.help)}</p>
-            <a href="${pass.helpUrl}" target="_blank" class="help-link">Maggiori informazioni</a>
+            <a href="${pass.helpUrl}" target="_blank" class="help-link">More info...</a>
             ${pass.nodes && pass.nodes.length > 0 ? 
-              `<h5>Elementi che soddisfano il criterio:</h5>${nodesHtml}` : ''}
+              `<h5>Elements that pass the criteria:</h5>${nodesHtml}` : ''}
           </div>
         `;
       });
@@ -309,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Funzione per escape dell'HTML
   function escapeHtml(unsafe) {
     return unsafe
       .replace(/&/g, "&amp;")
@@ -318,4 +285,4 @@ document.addEventListener('DOMContentLoaded', function () {
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
   }
-});
+})

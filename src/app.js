@@ -27,6 +27,10 @@ export const server = () => {
     res.status(200).json({ status: 'ok' })
   })
   
+  app.get('/frontend/sample.html', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/sample.html'))
+  })
+  
   app.get('/frontend', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'))
   })
