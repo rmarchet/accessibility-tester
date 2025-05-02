@@ -10,7 +10,9 @@ export class AccessibilityService {
 
   async runTests(html) {
     try {
-      const dom = new JSDOM(html, { runScripts: 'dangerously' })
+      const dom = new JSDOM(html, {
+        runScripts: 'outside-only',
+      })
       const { window } = dom
       const { document } = window
       axe.configure({
