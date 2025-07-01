@@ -1,11 +1,11 @@
-import { NAMED_COLORS } from "./namedColors"
+import { NAMED_COLORS } from "./namedColors.js"
 import { 
   DEFAULT_BROWSER_COLORS,
   DEFAULT_TEXT_COLOR,
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_FONT_SIZE,
-} from "./browserDefaults"
-import { SYSTEM_COLORS } from "./systemColors"
+} from "./browserDefaults.js"
+import { SYSTEM_COLORS } from "./systemColors.js"
 
 export class ColorContrastService {
   static DEFAULT_TEXT_COLOR = DEFAULT_TEXT_COLOR

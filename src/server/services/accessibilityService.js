@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom'
 import axe from 'axe-core'
 import { createCanvas } from 'canvas'
-import colorContrastService from './colorContrastService'
+import colorContrastService from './colorContrastService.js'
 
 export class AccessibilityService {
   constructor(contrastService = colorContrastService) {

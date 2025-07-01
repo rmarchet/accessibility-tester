@@ -1,4 +1,4 @@
-import { AccessibilityController } from '../../controllers/accessibilityController'
+import { AccessibilityController } from '../accessibilityController'
 import { AccessibilityService } from '../../services/accessibilityService'
 
 describe('AccessibilityController', () => {

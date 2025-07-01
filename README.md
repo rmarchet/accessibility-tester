@@ -1,87 +1,152 @@
-# Accessibility Test API
+# Accessibility Tester
 
-This project is a REST API built with Node.js that performs accessibility tests on HTML content using axe as accessibility rules test tool. The API accepts HTML input and returns a JSON response detailing the accessibility criteria that are satisfied and those that are not.
-
-## Features
-
-- Accepts HTML input for accessibility testing.
-- Utilizes Sa11y or axe for running accessibility tests.
-- Returns a structured JSON response with satisfied and unsatisfied criteria.
+A modern web application for testing website accessibility using axe-core, built with a React frontend and Node.js backend.
 
 ## Project Structure
 
+This project uses a monorepo structure with Yarn workspaces:
+
 ```
-accessibility-test-api
-├── src
-│   ├── app.js                  # Entry point of the application
-│   ├── controllers
-│   │   └── accessibilityController.js  # Handles accessibility test requests
-│   ├── services
-│   │   └── accessibilityService.js     # Contains logic for running accessibility tests
-│   └── routes
-│       └── index.js            # Defines API routes
-│  
-├── package.json                 # NPM configuration file
-├── .env                         # Environment variables
-├── .gitignore                   # Files to ignore by Git
-└── README.md                    # Project documentation
+accessibility-tester/
+├── package.json              # Root package.json with workspace configuration
+├── src/
+│   ├── server/               # Backend API (Node.js + Express)
+│   │   ├── package.json
+│   │   ├── app.js
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── __tests__/
+│   └── frontend/             # Frontend app (React + Vite)
+│       ├── package.json
+│       ├── vite.config.js
+│       ├── index.html
+│       └── src/
+│           ├── main.jsx
+│           ├── App.jsx
+│           ├── App.css
+│           └── index.css
+└── README.md
 ```
+
+## Prerequisites
+
+- Node.js >=20.0.0
+- Yarn package manager
 
 ## Installation
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/rmarchet/accessibility-tester.git
-   ```
+Install all dependencies for both frontend and backend:
 
-2. Navigate to the project directory:
-   ```
-   cd accessibility-tester
-   ```
-
-3. Install the dependencies:
-   ```
-   yarn install
-   ```
-
-4. Create a `.env` file in the root directory and add any necessary environment variables, in particular `PORT=3010` or any TCP you want to use to run the server.
-
-## Usage
-
-To start the server locally, run:
+```bash
+yarn install
 ```
+
+## Development
+
+### Start both frontend and backend in development mode:
+```bash
 yarn dev
 ```
 
-The API will be available at `http://localhost:3010`.
+This will start:
+- Backend server on `http://localhost:5000`
+- Frontend development server on `http://localhost:3000`
 
-### API Endpoints
+### Start individual services:
 
-- **POST /api/accessibility/test**
-  - Request Body: 
-    ```json
-    {
-      "html": "<html>Your HTML content here</html>"
-    }
-    ```
-  - Response:
-    ```json
-    {
-      "satisfied": ["Criterion 1", "Criterion 2"],
-      "unsatisfied": ["Criterion 3"]
-    }
-    ```
+**Backend only:**
+```bash
+yarn server:dev
+```
 
-## Front-end
+**Frontend only:**
+```bash
+yarn frontend:dev
+```
 
-This tool comes with a very simple front-end to test the API.
-It can be loaded in the browser ath the URL:
+## Building for Production
 
-http://localhost:3010/frontend
+### Build both frontend and backend:
+```bash
+yarn build
+```
+
+### Build individual services:
+
+**Backend:**
+```bash
+yarn server:build
+```
+
+**Frontend:**
+```bash
+yarn frontend:build
+```
+
+## Testing
+
+Run tests for all workspaces:
+```bash
+yarn test
+```
+
+Run tests in watch mode:
+```bash
+yarn test:watch
+```
+
+## API Endpoints
+
+### POST /api/test
+Test a website for accessibility issues.
+
+**Request Body:**
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+**Response:**
+```json
+{
+  "violations": [...],
+  "passes": [...],
+  "incomplete": [...],
+  "inapplicable": [...]
+}
+```
+
+## Architecture
+
+### Frontend (React + Vite)
+- **React 18**: Modern React with hooks
+- **Vite**: Fast build tool and development server
+- **Axios**: HTTP client for API calls
+- **Modern CSS**: Responsive design with dark/light mode support
+
+### Backend (Node.js + Express)
+- **Express**: Web framework
+- **axe-core**: Accessibility testing engine
+- **JSDOM**: DOM implementation for server-side testing
+- **Canvas**: HTML5 Canvas API for headless rendering
+- **CORS**: Cross-origin resource sharing
+
+### Key Features
+- **Monorepo**: Single repository with multiple packages
+- **Workspace Management**: Yarn workspaces for dependency management
+- **Development Proxy**: Frontend proxies API calls to backend during development
+- **Modern Tooling**: Babel, ESLint, Vite, and Jest
+- **Accessibility Testing**: Comprehensive accessibility analysis using axe-core
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
